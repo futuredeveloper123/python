@@ -55,3 +55,121 @@ with open('./data/data/singer.csv', 'r') as f:
     # 전체 출력
     for imsi in data:
         print(imsi)
+
+
+#기록하기
+import csv
+#newline옵션을 이용해서 빈줄이 생기지 않도록 설정
+with open('./data/data/singer.csv', 'a' , newline='') as f:
+    #CSV로 읽기
+    wr = csv.writer(f)
+    wr.writerow([4, 'zkfls', '1991-05-30', 'aespa'])
+
+#바이트 단위로 파일에 읽고 쓰기
+with open('./data/test.bin', 'wb') as f:
+    f.write("안녕하세요".encode())
+
+#문자열을 바이트 단위로 기록했으므로 읽을 때는 문자열로 변환해서 읽어야 함
+with open('./data/test.bin', 'rb') as f:
+    byteAr = f.read()
+    #print(byteAr)
+    print(byteAr.decode())
+
+
+##Serializable(직렬화)-객체 단위로 파일에 읽고 쓰는 것
+# 직렬화를 위해 DTO클래스 생성
+class DTO:
+    def setNum(self, num):
+        self.num = num
+
+    def setName(self, name):
+        self.name = name
+
+    def getNum(self):
+        return self.num
+
+    def getName(self):
+        return self.name
+
+    def toString(self):
+        return "{번호:{0} 이름:{1}}".format(self.num, self.name)
+
+
+# 직렬화 할 인스턴스 생성
+dto1 = DTO()
+dto1.setNum(1)
+dto1.setName("유관순")
+
+dto2 = DTO()
+dto2.setNum(2)
+dto2.setName("안중근")
+
+li = [dto1, dto2]
+
+import pickle
+
+with open('./data/data.dat', 'wb') as f:
+    pickle.dump(li, f)
+
+
+#객체 직렬화 – 직렬화
+import pickle
+try:
+    with open('./data/test.txt', 'wb') as f:
+        pickle.dump(li, f)
+        f.close()
+    with open('./data/test.txt', 'rb') as f:
+        result = pickle.load(f)
+        for temp in result:
+            print(temp.toString())
+        f.close()
+except Exception as e:
+    print("예외 발생:", e)
+finally:
+    f.close()
+
+
+import pickle
+with open('./data/data.dat', 'rb') as f:
+    result = pickle.load(f)
+    for dto in result:
+        print(dto.toString())
+
+
+
+import zipfile
+filelist = ["./test.txt"]
+with zipfile.ZipFile('./test.zip', 'w', compression=zipfile.ZIP_BZIP2) as myzip:
+    for temp in filelist:
+        myzip.write(temp)
+zipfile.ZipFile('./test.zip').extractall()
+
+# 엑셀 파일 읽기
+import openpyxl
+
+# 엑셀 파일 포인터
+wb = None
+
+try:
+    # 엑셀 파일에 포인터를 생성
+    wb = openpyxl.load_workbook('./data/data/score.xlsx')
+    # print(wb) # 경로 맞나 확인하고 주석처리 ㅎㅎ
+
+    # sheet 가져오기
+    ws = wb.active  # 현재 활성화된 sheet를 가져옴.
+    # ws = wb.get_sheet_by_name("sheet이름")
+
+    # 행단위 접근 - 각 행을 튜플로 접근
+    # 읽어오는 개념이라 못고치도록 주는 것 ,,,,,
+    for row in ws.rows:
+        print(row)
+        # 각 행의 인덱스
+        print(row[0].value)
+        print(row[0].row)
+
+except Exception as e:
+    print(e)
+
+finally:
+    if wb != None:
+        wb.close()
