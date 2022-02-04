@@ -33,3 +33,25 @@ for i in range(2):
     th.start()
 print("메인 종료")          # 쓰레드 실행 시작
 
+#singer.csv 읽기
+import csv
+with open('./data/data/singer.csv', 'r') as f:
+    content = f.read()
+    data = content.split(',')
+    print(type(data))
+    for imsi in data:
+        print(imsi)
+
+
+# csv 모듈을 이용해서 읽기 - csv.reader(file객체)를 대입해서 읽음
+# 줄 바꿈 별로 하나의 list를 별도로 생성
+import csv
+
+with open('./data/data/singer.csv', 'r') as f:
+    # CSV로 읽기
+    # 구분자가 ,가 아니면 delimiter에 구분자를 설정해주면 됨
+    data = csv.reader(f)
+    print(type(data))  # 자료형 확인
+    # 전체 출력
+    for imsi in data:
+        print(imsi)
