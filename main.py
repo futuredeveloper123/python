@@ -173,3 +173,46 @@ except Exception as e:
 finally:
     if wb != None:
         wb.close()
+
+
+
+
+# 엑셀 파일 읽기
+import openpyxl
+# 엑셀 파일 포인터
+wb = None
+try:
+    # 엑셀 파일에 포인터를 생성
+    wb = openpyxl.load_workbook('./data/data/score.xlsx')
+    ws = wb.active  # 현재 활성화된 sheet를 가져옴.
+    for row in ws.rows:
+
+        # 1행 5열의 합계라고 설정
+        if row[0].row == 1:
+            ws.cell(row=row[0].row, column=5).value = "합계"
+            continue
+
+        # 합계 구하기
+        total = row[1].value + row[2].value + row[3].value
+        ws.cell(row=row[0].row, column=5).value = total
+
+    # 파일에 기록
+    wb.save("./data/score2.xlsx")
+except Exception as e:
+    print(e)
+
+finally:
+    if wb != None:
+        wb.close()
+
+
+# 데이터베이스 연동
+###MYSQL접속
+#mysql 접속
+import pymysql
+
+con = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1025', db='user00', charset='utf8')
+
+print(con)
+
+con.close()
