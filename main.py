@@ -216,3 +216,81 @@ con = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='1025', d
 print(con)
 
 con.close()
+
+# 데이터삽입
+import sys, pymysql
+
+# 연결 객체 변수 생성
+con = None
+
+try:
+    # 연결
+    con = pymysql.connet(host='localhost', port=3306,
+                         db='user11', user='root', passwd='1025', charset='utf8')
+    print(con)
+
+except Exception as e:
+    print(e)
+    print(sys.exc_info())
+finally:
+    # 연결 해제
+    if con != None:
+        con.close()
+
+        # 데이터삽입
+        import sys, pymysql
+
+        # 연결 객체 변수 생성
+        con = None
+
+        try:
+            # 연결
+            con = pymysql.connet(host='localhost', port=3306,
+                                 db='user11', user='root', passwd='1025', charset='utf8')
+            print(con)
+
+        except Exception as e:
+            print(e)
+            print(sys.exc_info())
+        finally:
+            # 연결 해제
+            if con != None:
+                con.close()
+
+# 데이터삽입
+import sys, pymysql
+
+# 연결 객체 변수 생성
+con = None
+
+try:
+    # 연결
+    con = pymysql.connect(host='localhost', port=3306,
+                          db='user11', user='root', passwd='1025', charset='utf8')
+    print(con)
+
+    # sql 실행 객체 가져오기
+    cursor = con.cursor()
+    """
+    cursor.execute("insert into usertbl values('dj','dajung',0530 ,'seoul','01077717721','20220207')")
+    """
+    # 파라미터 매핑
+    cursor.execute("insert into usertbl values(%s,%s,%s,%s,%s,%s)",
+                   ("g", "eajung", 1215, "seoul", "01077717721", "20220207"))
+    con.commit()
+
+except Exception as e:
+    print(e)
+    print(sys.exc_info())
+finally:
+    # 연결 해제
+    if con != None:
+        con.close()
+
+
+#mongodb서버 연결
+from pymongo import MongoClient
+
+con = MongoClient('127.0.0.1')
+
+print(con)
