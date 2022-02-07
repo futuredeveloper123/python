@@ -294,3 +294,262 @@ from pymongo import MongoClient
 con = MongoClient('127.0.0.1')
 
 print(con)
+
+
+#데이터 삽입
+from pymongo import MongoClient
+
+con = MongoClient('127.0.0.1')
+
+#사용할 데이터베이스 연결
+db = con.mymongo
+
+#컬렉션 설정 - 테이블 생성 또는 연결
+collect = db.users
+
+#삽입할 데이터 생성 - dict
+doc1={'empno' : '0001', 'ename' : '강'}
+doc2={'empno' : '0002', 'ename' : '김'}
+doc3={'empno' : '0003', 'ename' : '박'}
+doc4={'empno' : '0004', 'ename' : '이'}
+
+#파이선 , 자바스크립트 , 노드는 행을 만드는 방법이 같음 .
+
+collect.insert_many([doc1, doc2, doc3, doc4])
+
+
+#데이터 조회
+from pymongo import MongoClient
+
+con = MongoClient('127.0.0.1')
+
+#사용할 데이터베이스 연결
+db = con.mymongo
+
+#컬렉션 설정 - 테이블 생성 또는 연결
+collect = db.users
+
+#조회
+#result=collect.find()
+#print(result)
+#Cursor가 나오면 이터레이터? 생각해야함
+for r in result:
+    print(r)
+
+
+
+#웹에서 데이터 가져오기
+#기본패키지 이용
+import urllib.request
+
+#데이터 읽기
+response = urllib.request.urlopen('https://www.daum.net')
+#바이트 배열
+data = response.read()
+print(data)
+
+
+import urllib.request
+#파라미터 인코딩을 위한 모듈
+from urllib.parse import quote
+
+keyword = quote('코로나')
+
+#데이터 읽기
+response = urllib.request.urlopen("http://search.hani.co.kr/Search?command=query&keyword='keyword'&sort=d&period=all&media=news")
+
+#바이트 배열
+data = response.read()
+#읽어온 데이터의 인코딩 확인
+encoding = response.info().get_content_charset()
+#인코딩 설정
+html= data.decode('utf8')
+print(html)
+
+
+#requests 모듈 이용하기
+import requests
+
+response = requests.get("https://www.naver.com")
+#print(response.text)
+
+response = requests.get("http://www.google.com")
+print(response.text)
+
+
+#이미지 가져와서 저장하기
+import requests
+imgurl = "https://img1.daumcdn.net/thumb/C428x428/?scode=mtistory2&fname=https%3A%2F%2Ftistory3.daumcdn.net%2Ftistory%2F5007010%2Fattach%2Fbdd39d43763245a2a790df254bb0d222"
+response = requests.get(imgurl)
+
+with open('./daj.jpg', 'wb') as f:
+    img = response.content
+    f.write(img)
+
+
+#JSON 파싱
+#카카오 오픈api데이터 가져오기 - 카테고리 검색
+import requests
+import json
+#약국을 찾겠다 PM9
+url = 'https://dapi.kakao.com/v2/local/search/category.json?category_group_code=PM9&y=37.57002838826&x=126.97962084516&radius=5000'
+headers ={'Authorization': 'KakaoAK 5957e853b495a0aba8c6eefc5489fce8'}
+
+data = requests.get(url, headers=headers)
+print(data.text)
+
+
+#JSON 파싱
+#카카오 오픈api데이터 가져오기 - 카테고리 검색
+import requests
+import json
+#약국을 찾겠다 PM9
+url = 'https://dapi.kakao.com/v2/local/search/category.json?category_group_code=PM9&y=37.57002838826&x=126.97962084516&radius=5000'
+headers ={'Authorization': 'KakaoAK 5957e853b495a0aba8c6eefc5489fce8'}
+
+data = requests.get(url, headers=headers)
+#print(data.text)
+
+#json 파싱
+result = json.loads(data.text)
+#print(type(result))
+#<class 'dict'>일때는
+documents = result["documents"]
+#print(documents)
+
+for temp in documents:
+    print(temp['place_name'], ":", temp['address_name'])
+
+
+#기상청 오늘의 날씨 사이트에서 지점과 체감온도 , 습도, 풍속 가져오기
+import requests, bs4
+#html확인
+response = requests.get( 'https://www.weather.go.kr/weather/observation/currentweather.jsp')
+print(response.text)
+
+
+
+#기상청 오늘의 날씨 사이트에서 지점과 체감온도 , 습도, 풍속 가져오기
+import requests, bs4
+#html확인
+response = requests.get( 'https://www.weather.go.kr/weather/observation/currentweather.jsp')
+#print(response.text)
+
+soup = bs4.BeautifulSoup(response.text, 'html.parser')
+#print(soup)
+#원하는 정보가 잇는 테이블을 선택
+#table = soup.select('#content_weather > table')
+table = soup.select('.table_develop3')
+print(table)
+
+
+#기상청 오늘의 날씨 사이트에서 지점과 체감온도 , 습도, 풍속 가져오기
+import requests, bs4
+#html확인
+response = requests.get( 'https://www.weather.go.kr/weather/observation/currentweather.jsp')
+#print(response.text)
+
+soup = bs4.BeautifulSoup(response.text, 'html.parser')
+#print(soup)
+#원하는 정보가 잇는 테이블을 선택
+#table = soup.select('#content_weather > table')
+table = soup.select('.table_develop3')
+for temp in table[0].find_all('tr'):
+    #각 줄의 각 칸들을 list로 변환
+    tds=list(temp.find_all('td'))
+    #list순회
+    for td in tds:
+        if td.find('a'):
+            print(td.find('a').text, ":", tds[7].text, ":", tds[10].text)
+
+
+
+#HTML Parsinig
+#https://tv.naver.com/r/ 에서 타이틀 가져오기
+import requests, bs4
+
+#html 가져오기
+response = requests.get('https://tv.naver.com/r/')
+html = response.text
+
+#html을 메모리 펼치기
+bs = bs4.BeautifulSoup(html, 'html.parser')
+#print(bs)
+
+#필요한데이터선택
+tags = bs.select('dl > dt > a > tooltip')
+
+
+#xml파싱
+#동아일보 전체 기사 파싱
+import requests, bs4
+#html확인
+response = requests.get('https://rss.donga.com/total.xml')
+#print(response.text)
+rss=bs4.BeautifulSoup(response.text, 'lxml-xml')
+print(rss)
+
+#item 태그 안의 title 추출
+items = rss.find_all('item')
+print(items)
+
+
+#xml파싱
+#동아일보 전체 기사 파싱
+import requests, bs4
+#html확인
+response = requests.get('https://rss.donga.com/total.xml')
+#print(response.text)
+rss=bs4.BeautifulSoup(response.text, 'lxml-xml')
+#print(rss)
+
+#item 태그 안의 title 추출
+items = rss.find_all('item')
+#print(items)
+for item in items:
+    print(item.find('title').getText())
+
+
+#selenium
+#크롬 실행
+from selenium import webdriver
+
+#드라이버 경로를 설정하면 크롬이 실행됨
+driver = webdriver.Chrome('c:\\lecture\\chromedriver')
+
+
+#다음 로그인 하기
+#크롬실행
+from selenium import webdriver
+
+#드라이버 경로를 설정하면 크롬이 실행됨
+driver = webdriver.Chrome('c:\\lecture\\chromedriver')
+
+#다음 로그인 페이지로 이동
+driver.get('https://logins.daum.net/accounts/signinform.do?url=https%3A%2F%2Fwww.daum.net')
+
+#아이디와 비밀번호 입력
+driver.find_element_by_xpath('//*[@id="id"]').send_keys('id')
+driver.find_element_by_xpath('//*[@id="inputPwd"]').send_keys('pw')
+
+#로그인 버튼을 찾아서 클릭
+driver.find_element_by_xpaty('//*[@id="loginBtn"]').click()
+
+#특정 카페로 이동
+driver.get('http://cafe.daum.net/samhak7/')
+
+#유투브스크롤
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+
+#드라이버 경로를 설정하면 크롬이 실행됨
+driver = webdriver.Chrome('c:\\lecture\\chromedriver')
+
+driver.get('https://www.youtube.com/')
+
+body = driver.find_element_by_tag_name('body')
+
+time.sleep(10)
+
+body.send_keys(Keys.PAGE_DOWN)
